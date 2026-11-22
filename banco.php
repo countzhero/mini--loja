@@ -15,11 +15,19 @@ function conectar(): PDO
         preco REAL NOT NULL
     )');
 
-    // NOVO: a coluna da foto. A tabela já existia? O ALTER TABLE acrescenta a coluna, uma vez só
+    // a coluna da foto (aula 14). A tabela já existia? O ALTER TABLE acrescenta a coluna, uma vez só
     $colunas = $pdo->query('PRAGMA table_info(produtos)')->fetchAll(PDO::FETCH_COLUMN, 1);
     if (!in_array('imagem', $colunas)) {
         $pdo->exec('ALTER TABLE produtos ADD COLUMN imagem TEXT');
     }
+
+    // NOVO: a tabela dos funcionários. A senha nunca entra pura: entra o "hash" dela
+    $pdo->exec('CREATE TABLE IF NOT EXISTS funcionarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        senha TEXT NOT NULL
+    )');
 
     // banco vazio? entram três produtos de exemplo, para a lista não começar em branco
     $total = $pdo->query('SELECT COUNT(*) FROM produtos')->fetchColumn();
@@ -71,4 +79,21 @@ function atualizarProduto(int $id, string $nome, float $preco, string $imagem): 
     $pdo = conectar();
     $stmt = $pdo->prepare('UPDATE produtos SET nome = :nome, preco = :preco, imagem = :imagem WHERE id = :id');
     $stmt->execute([':nome' => $nome, ':preco' => $preco, ':imagem' => $imagem, ':id' => $id]);
+}
+
+// NOVO: grava um funcionário; a senha já chega embaralhada (o hash)
+function inserirFuncionario(string $nome, string $email, string $hash): void
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('INSERT INTO funcionarios (nome, email, senha) VALUES (:nome, :email, :senha)');
+    $stmt->execute([':nome' => $nome, ':email' => $email, ':senha' => $hash]);
+}
+
+// NOVO: procura o funcionário pelo e-mail (devolve null se não tem)
+function buscarFuncionario(string $email): ?array
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('SELECT id, nome, email, senha FROM funcionarios WHERE email = :email');
+    $stmt->execute([':email' => $email]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
