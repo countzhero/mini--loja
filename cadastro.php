@@ -1,9 +1,18 @@
 <?php
 // cadastro.php: o CONTROLE.
 // Recebe o formulário, pede ao modelo (banco.php) e chama a visão (tela.php).
+// NOVO: a sessão conta quem está logado
+session_start();
 require __DIR__ . '/banco.php';
 
-// NOVO: o garçom confere a foto antes de pendurar no cardápio.
+// NOVO: a tranca. Visitante só olha; mexer (cadastrar, editar, excluir) é com funcionário logado
+$logado = $_SESSION['funcionario'] ?? '';
+if ($logado === '' && ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['editar']))) {
+    header('Location: funcionario.php');
+    exit;
+}
+
+// o garçom confere a foto antes de pendurar no cardápio.
 // Devolve '' quando está tudo certo, ou a frase do problema.
 function conferirImagem(array $arquivo): string
 {
@@ -25,7 +34,7 @@ function conferirImagem(array $arquivo): string
     return '';
 }
 
-// NOVO: guarda a foto conferida com um nome inventado pelo sistema e devolve esse nome
+// guarda a foto conferida com um nome inventado pelo sistema e devolve esse nome
 function guardarImagem(array $arquivo): string
 {
     $extensoes = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
@@ -41,7 +50,7 @@ function guardarImagem(array $arquivo): string
     return $nome;
 }
 
-// NOVO: tira uma foto da pasta uploads (basename impede sair da pasta)
+// tira uma foto da pasta uploads (basename impede sair da pasta)
 function apagarImagem(string $nome): void
 {
     $caminho = __DIR__ . '/uploads/' . basename($nome);

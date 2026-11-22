@@ -21,7 +21,7 @@ function conectar(): PDO
         $pdo->exec('ALTER TABLE produtos ADD COLUMN imagem TEXT');
     }
 
-    // NOVO: a tabela dos funcionários. A senha nunca entra pura: entra o "hash" dela
+    // a tabela dos funcionários. A senha nunca entra pura: entra o "hash" dela
     $pdo->exec('CREATE TABLE IF NOT EXISTS funcionarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
@@ -81,7 +81,7 @@ function atualizarProduto(int $id, string $nome, float $preco, string $imagem): 
     $stmt->execute([':nome' => $nome, ':preco' => $preco, ':imagem' => $imagem, ':id' => $id]);
 }
 
-// NOVO: grava um funcionário; a senha já chega embaralhada (o hash)
+// grava um funcionário; a senha já chega embaralhada (o hash)
 function inserirFuncionario(string $nome, string $email, string $hash): void
 {
     $pdo = conectar();
@@ -89,11 +89,18 @@ function inserirFuncionario(string $nome, string $email, string $hash): void
     $stmt->execute([':nome' => $nome, ':email' => $email, ':senha' => $hash]);
 }
 
-// NOVO: procura o funcionário pelo e-mail (devolve null se não tem)
+// procura o funcionário pelo e-mail (devolve null se não tem)
 function buscarFuncionario(string $email): ?array
 {
     $pdo = conectar();
     $stmt = $pdo->prepare('SELECT id, nome, email, senha FROM funcionarios WHERE email = :email');
     $stmt->execute([':email' => $email]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
+// NOVO: quantos funcionários a loja tem (zero = o primeiro cadastro é livre)
+function contarFuncionarios(): int
+{
+    $pdo = conectar();
+    return (int) $pdo->query('SELECT COUNT(*) FROM funcionarios')->fetchColumn();
 }

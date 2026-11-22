@@ -1,4 +1,7 @@
-<?php // tela.php: a VISÃO. Só o HTML; as variáveis vêm do cadastro.php ?>
+<?php
+// tela.php: a VISÃO. Só o HTML; as variáveis vêm do cadastro.php.
+$logado = $logado ?? false;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,12 +12,22 @@
   <p><a href="index.html">← Página inicial</a></p>
   <h1>Mini Loja</h1>
 
+  <!-- NOVO: quem está logado vê o próprio nome; o visitante vê o caminho para entrar -->
+  <?php if ($logado): ?>
+    <p>Olá, <strong><?= htmlspecialchars($logado) ?></strong>! · <a href="funcionario.php">Área do funcionário</a> · <a href="funcionario.php?sair=1">Sair</a></p>
+  <?php else: ?>
+    <p>É funcionário? <a href="funcionario.php">Entre</a> para cadastrar produtos.</p>
+  <?php endif; ?>
+
+  <!-- NOVO: o formulário só aparece para o funcionário logado -->
+  <?php if ($logado): ?>
+
   <h2><?= !empty($produto['id']) ? 'Editar produto' : 'Novo produto' ?></h2>
 
   <?php if ($erro): ?>
     <p style="color: firebrick"><strong>Foto recusada:</strong> <?= htmlspecialchars($erro) ?></p>
   <?php endif; ?>
-  <!-- NOVO: sem o enctype, o arquivo não viaja (chega só o nome dele) -->
+  <!-- sem o enctype, o arquivo não viaja (chega só o nome dele) -->
   <form method="post" action="cadastro.php" enctype="multipart/form-data">
     <!-- o id escondido diz ao controle qual produto editar (vazio = produto novo) -->
     <input type="hidden" name="id" value="<?= $produto['id'] ?? '' ?>">
@@ -38,6 +51,7 @@
       <a href="cadastro.php">Cancelar</a>
     <?php endif; ?>
   </form>
+  <?php endif; ?>
 
   <?php $produtos = $produtos ?? []; ?>
   <h2>Produtos (<?= count($produtos) ?>)</h2>
@@ -50,10 +64,12 @@
           <span>📦 sem foto</span>
         <?php endif; ?>
         <?= htmlspecialchars($item['nome']) ?> · R$ <?= number_format($item['preco'], 2, ',', '.') ?>
-        <a href="cadastro.php?editar=<?= $item['id'] ?>">Editar</a>
-        <form method="post" action="cadastro.php" style="display: inline">
-          <button name="excluir" value="<?= $item['id'] ?>">Excluir</button>
-        </form>
+        <?php if ($logado): ?>
+          <a href="cadastro.php?editar=<?= $item['id'] ?>">Editar</a>
+          <form method="post" action="cadastro.php" style="display: inline">
+            <button name="excluir" value="<?= $item['id'] ?>">Excluir</button>
+          </form>
+        <?php endif; ?>
       </li>
     <?php endforeach; ?>
   </ul>
