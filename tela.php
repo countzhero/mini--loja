@@ -39,6 +39,7 @@
     <?php endif; ?>
   </form>
 
+  <?php $produtos = $produtos ?? []; ?>
   <h2>Produtos (<?= count($produtos) ?>)</h2>
   <ul>
     <?php foreach ($produtos as $item): ?>
