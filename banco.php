@@ -15,6 +15,12 @@ function conectar(): PDO
         preco REAL NOT NULL
     )');
 
+    // NOVO: a coluna da foto. A tabela já existia? O ALTER TABLE acrescenta a coluna, uma vez só
+    $colunas = $pdo->query('PRAGMA table_info(produtos)')->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('imagem', $colunas)) {
+        $pdo->exec('ALTER TABLE produtos ADD COLUMN imagem TEXT');
+    }
+
     // banco vazio? entram três produtos de exemplo, para a lista não começar em branco
     $total = $pdo->query('SELECT COUNT(*) FROM produtos')->fetchColumn();
     if ($total == 0) {
@@ -27,19 +33,19 @@ function conectar(): PDO
     return $pdo;
 }
 
-// R: devolve todos os produtos, em ordem alfabética
+// R: devolve todos os produtos, em ordem alfabética (agora com a foto)
 function listarProdutos(): array
 {
     $pdo = conectar();
-    return $pdo->query('SELECT id, nome, preco FROM produtos ORDER BY nome')->fetchAll(PDO::FETCH_ASSOC);
+    return $pdo->query('SELECT id, nome, preco, imagem FROM produtos ORDER BY nome')->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// C: grava um produto novo (o prepare protege contra SQL injection)
-function inserirProduto(string $nome, float $preco): void
+// C: grava um produto novo; a imagem é só o NOME do arquivo (a foto fica na pasta uploads)
+function inserirProduto(string $nome, float $preco, string $imagem): void
 {
     $pdo = conectar();
-    $stmt = $pdo->prepare('INSERT INTO produtos (nome, preco) VALUES (:nome, :preco)');
-    $stmt->execute([':nome' => $nome, ':preco' => $preco]);
+    $stmt = $pdo->prepare('INSERT INTO produtos (nome, preco, imagem) VALUES (:nome, :preco, :imagem)');
+    $stmt->execute([':nome' => $nome, ':preco' => $preco, ':imagem' => $imagem]);
 }
 
 // D: apaga o produto pelo id (o número que o banco deu a ele)
@@ -54,12 +60,12 @@ function excluirProduto(int $id): void
 function buscarProduto(int $id): ?array
 {
     $pdo = conectar();
-    $stmt = $pdo->prepare('SELECT id, nome, preco FROM produtos WHERE id = :id');
+    $stmt = $pdo->prepare('SELECT id, nome, preco, imagem FROM produtos WHERE id = :id');
     $stmt->execute([':id' => $id]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// U: troca o nome e o preço do produto
+// U: troca o nome e o preço do produto (a foto continua a mesma)
 function atualizarProduto(int $id, string $nome, float $preco): void
 {
     $pdo = conectar();
