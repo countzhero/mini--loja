@@ -33,3 +33,11 @@ function listarProdutos(): array
     $pdo = conectar();
     return $pdo->query('SELECT id, nome, preco FROM produtos ORDER BY nome')->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// C: grava um produto novo (o prepare protege contra SQL injection)
+function inserirProduto(string $nome, float $preco): void
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('INSERT INTO produtos (nome, preco) VALUES (:nome, :preco)');
+    $stmt->execute([':nome' => $nome, ':preco' => $preco]);
+}

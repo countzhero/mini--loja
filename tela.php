@@ -9,6 +9,17 @@
   <p><a href="index.html">← Página inicial</a></p>
   <h1>Mini Loja</h1>
 
+  <h2>Novo produto</h2>
+  <form method="post" action="cadastro.php">
+    <label for="nome">Nome</label>
+    <input id="nome" name="nome" required>
+
+    <label for="preco">Preço (R$)</label>
+    <input id="preco" name="preco" type="number" step="0.01" min="0" required>
+
+    <button type="submit">Cadastrar</button>
+  </form>
+
   <?php $produtos = $produtos ?? []; ?>
   <h2>Produtos (<?= count($produtos) ?>)</h2>
   <ul>
