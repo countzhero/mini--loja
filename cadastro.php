@@ -41,9 +41,23 @@ function guardarImagem(array $arquivo): string
     return $nome;
 }
 
-// clicou em "Excluir"? apaga e volta para a página limpa
+// NOVO: tira uma foto da pasta uploads (basename impede sair da pasta)
+function apagarImagem(string $nome): void
+{
+    $caminho = __DIR__ . '/uploads/' . basename($nome);
+    if ($nome !== '' && is_file($caminho)) {
+        unlink($caminho);
+    }
+}
+
+// clicou em "Excluir"? apaga a foto, depois o produto, e volta para a página limpa
 if (isset($_POST['excluir'])) {
-    excluirProduto((int) $_POST['excluir']);
+    $id = (int) $_POST['excluir'];
+    $produto = buscarProduto($id);
+    if ($produto) {
+        apagarImagem($produto['imagem'] ?? '');
+    }
+    excluirProduto($id);
     header('Location: cadastro.php');
     exit;
 }
@@ -70,7 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagem = guardarImagem($_FILES['imagem']);
         }
         if ($id > 0) {
-            atualizarProduto($id, $nome, $preco);
+            // edição: sem foto nova, fica a de antes; com foto nova, a antiga sai da pasta
+            $antigo = buscarProduto($id);
+            $fotoAntiga = $antigo['imagem'] ?? '';
+            if ($imagem === '') {
+                $imagem = $fotoAntiga;
+            } else {
+                apagarImagem($fotoAntiga);
+            }
+            atualizarProduto($id, $nome, $preco, $imagem);
         } else {
             inserirProduto($nome, $preco, $imagem);
         }

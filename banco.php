@@ -65,10 +65,10 @@ function buscarProduto(int $id): ?array
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// U: troca o nome e o preço do produto (a foto continua a mesma)
-function atualizarProduto(int $id, string $nome, float $preco): void
+// U: troca o nome, o preço e a foto do produto
+function atualizarProduto(int $id, string $nome, float $preco, string $imagem): void
 {
     $pdo = conectar();
-    $stmt = $pdo->prepare('UPDATE produtos SET nome = :nome, preco = :preco WHERE id = :id');
-    $stmt->execute([':nome' => $nome, ':preco' => $preco, ':id' => $id]);
+    $stmt = $pdo->prepare('UPDATE produtos SET nome = :nome, preco = :preco, imagem = :imagem WHERE id = :id');
+    $stmt->execute([':nome' => $nome, ':preco' => $preco, ':imagem' => $imagem, ':id' => $id]);
 }

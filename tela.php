@@ -25,7 +25,11 @@
     <label for="preco">Preço (R$)</label>
     <input id="preco" name="preco" type="number" step="0.01" min="0" required value="<?= $produto['preco'] ?? '' ?>">
 
-    <label for="imagem">Foto do produto</label>
+    <?php if (!empty($produto['imagem'])): ?>
+      <p>Foto atual: <img src="uploads/<?= htmlspecialchars($produto['imagem']) ?>" alt="" width="60"></p>
+    <?php endif; ?>
+
+    <label for="imagem"><?= !empty($produto['id']) ? 'Trocar a foto (só se quiser)' : 'Foto do produto' ?></label>
     <input id="imagem" name="imagem" type="file" accept="image/jpeg, image/png, image/webp">
     <small>JPG, PNG ou WEBP, até 2 MB.</small>
 
@@ -35,7 +39,6 @@
     <?php endif; ?>
   </form>
 
-  <?php $produtos = $produtos ?? []; ?>
   <h2>Produtos (<?= count($produtos) ?>)</h2>
   <ul>
     <?php foreach ($produtos as $item): ?>
