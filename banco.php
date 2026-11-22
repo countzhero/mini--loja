@@ -41,3 +41,11 @@ function inserirProduto(string $nome, float $preco): void
     $stmt = $pdo->prepare('INSERT INTO produtos (nome, preco) VALUES (:nome, :preco)');
     $stmt->execute([':nome' => $nome, ':preco' => $preco]);
 }
+
+// D: apaga o produto pelo id (o número que o banco deu a ele)
+function excluirProduto(int $id): void
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('DELETE FROM produtos WHERE id = :id');
+    $stmt->execute([':id' => $id]);
+}

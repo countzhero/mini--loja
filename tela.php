@@ -24,7 +24,12 @@
   <h2>Produtos (<?= count($produtos) ?>)</h2>
   <ul>
     <?php foreach ($produtos as $item): ?>
-      <li><?= htmlspecialchars($item['nome']) ?> · R$ <?= number_format($item['preco'], 2, ',', '.') ?></li>
+      <li>
+        <?= htmlspecialchars($item['nome']) ?> · R$ <?= number_format($item['preco'], 2, ',', '.') ?>
+        <form method="post" action="cadastro.php" style="display: inline">
+          <button name="excluir" value="<?= $item['id'] ?>">Excluir</button>
+        </form>
+      </li>
     <?php endforeach; ?>
   </ul>
 </body>
