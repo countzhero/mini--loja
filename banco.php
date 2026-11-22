@@ -49,3 +49,20 @@ function excluirProduto(int $id): void
     $stmt = $pdo->prepare('DELETE FROM produtos WHERE id = :id');
     $stmt->execute([':id' => $id]);
 }
+
+// busca um produto só, para preencher o formulário de edição
+function buscarProduto(int $id): ?array
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('SELECT id, nome, preco FROM produtos WHERE id = :id');
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
+// U: troca o nome e o preço do produto
+function atualizarProduto(int $id, string $nome, float $preco): void
+{
+    $pdo = conectar();
+    $stmt = $pdo->prepare('UPDATE produtos SET nome = :nome, preco = :preco WHERE id = :id');
+    $stmt->execute([':nome' => $nome, ':preco' => $preco, ':id' => $id]);
+}

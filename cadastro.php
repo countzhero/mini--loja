@@ -10,15 +10,27 @@ if (isset($_POST['excluir'])) {
     exit;
 }
 
-// o formulário foi enviado? grava o produto
+// o formulário foi enviado? com id é edição; sem id é produto novo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int) ($_POST['id'] ?? 0);
     $nome = trim($_POST['nome'] ?? '');
     $preco = (float) ($_POST['preco'] ?? 0);
-    inserirProduto($nome, $preco);
 
-    // volta para a página limpa: assim o F5 não cadastra de novo
+    if ($id > 0) {
+        atualizarProduto($id, $nome, $preco);
+    } else {
+        inserirProduto($nome, $preco);
+    }
+
+    // volta para a página limpa: assim o F5 não grava de novo
     header('Location: cadastro.php');
     exit;
+}
+
+// clicou em "Editar"? busca o produto para preencher o formulário
+$produto = null;
+if (isset($_GET['editar'])) {
+    $produto = buscarProduto((int) $_GET['editar']);
 }
 
 $produtos = listarProdutos();
