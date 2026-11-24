@@ -1,0 +1,325 @@
+/* ===================================
+   MINI LOJA
+   STYLE.CSS
+=================================== */
+
+:root {
+    --azul-marinho: #0F294A;
+    --azul-principal: #1D4ED8;
+    --azul-hover: #2563EB;
+    --azul-claro: #EFF6FF;
+
+    --verde: #16A34A;
+    --verde-bg: #DCFCE7;
+
+    --amarelo: #D97706;
+    --amarelo-bg: #FEF3C7;
+
+    --vermelho: #DC2626;
+    --vermelho-bg: #FEE2E2;
+
+    --cinza-bg: #F8FAFC;
+    --cinza-claro: #E2E8F0;
+    --cinza-texto: #64748B;
+
+    --branco: #FFFFFF;
+
+    --sombra: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --sombra-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    --radius: 12px;
+    --transition: 0.25s ease;
+}
+
+/* ===================================
+   RESET
+=================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===================================
+   BODY
+=================================== */
+
+body {
+    font-family: Inter, Roboto, Arial, sans-serif;
+    background: var(--cinza-bg);
+    color: #1E293B;
+    line-height: 1.6;
+}
+
+/* ===================================
+   CONTAINER
+=================================== */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* ===================================
+   HEADER
+=================================== */
+
+.header-content {
+    background: var(--azul-marinho);
+    color: var(--branco);
+    padding: 30px;
+    border-radius: var(--radius);
+    margin-bottom: 30px;
+    box-shadow: var(--sombra);
+}
+
+.header-content h1 {
+    color: var(--branco);
+    margin-bottom: 8px;
+}
+
+.header-content p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* ===================================
+   MAIN
+=================================== */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ===================================
+   CARDS
+=================================== */
+
+.card {
+    background: var(--branco);
+    border: 1px solid var(--cinza-claro);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--sombra);
+}
+
+.card:hover {
+    box-shadow: var(--sombra-hover);
+}
+
+/* ===================================
+   TIPOGRAFIA
+=================================== */
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    color: var(--azul-marinho);
+    margin-bottom: 20px;
+    border-left: 5px solid var(--azul-principal);
+    padding-left: 12px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+strong {
+    color: var(--azul-marinho);
+}
+
+/* ===================================
+   NAVEGAÇÃO
+=================================== */
+
+.navigation-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.navigation-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ===================================
+   LINKS
+=================================== */
+
+a {
+    color: var(--azul-principal);
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+a:hover {
+    color: var(--azul-hover);
+    text-decoration: underline;
+}
+
+/* ===================================
+   FORMULÁRIOS
+=================================== */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-weight: 600;
+    color: var(--azul-marinho);
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    font-size: 15px;
+    background: white;
+    transition: var(--transition);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--azul-principal);
+    box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15);
+}
+
+small {
+    color: var(--cinza-texto);
+}
+
+/* ===================================
+   BOTÕES
+=================================== */
+
+button,
+input[type="submit"] {
+    background: var(--azul-principal);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: var(--transition);
+    align-self: flex-start;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: var(--azul-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ===================================
+   EXCLUIR
+=================================== */
+
+button[name="excluir"] {
+    background: var(--vermelho);
+}
+
+button[name="excluir"]:hover {
+    background: #B91C1C;
+}
+
+/* ===================================
+   ALERTAS
+=================================== */
+
+.alert {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-sucesso {
+    background: var(--verde-bg);
+    color: var(--verde);
+    border-left: 5px solid var(--verde);
+}
+
+.alert-aviso {
+    background: var(--amarelo-bg);
+    color: var(--amarelo);
+    border-left: 5px solid var(--amarelo);
+}
+
+.alert-erro {
+    background: var(--vermelho-bg);
+    color: var(--vermelho);
+    border-left: 5px solid var(--vermelho);
+}
+
+/* ===================================
+   LISTA DE PRODUTOS
+=================================== */
+
+ul {
+    list-style: none;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #E5E7EB;
+    transition: var(--transition);
+    flex-wrap: wrap;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+ul li:nth-child(even) {
+    background: #FAFAFA;
+}
+
+ul li:hover {
+    background: var(--azul-claro);
+}
+
+/* ===================================
+   IMAGENS
+=================================== */
+
+img {
+    border-radius: 10px;
+    border: 1px solid #D1D5DB;
+    object-fit: cover;
+}
+
+img[width="60"] {
+    width: 60px;
+    height: 60px;
+}
+
+/* ===================================
+   TABELAS
+=====================
